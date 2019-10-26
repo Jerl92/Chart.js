@@ -21,7 +21,7 @@ class chart_widget extends WP_Widget {
                   <?php if ( $title )
                         echo $before_title . $title . $after_title; ?>
 							<ul>                                        
-                                <li><canvas id="canvas-widget" data-chartid="<?php echo $postid; ?>" data-chart-type="<?php echo $post_chart_type; ?>" ></canvas></li>
+                                <li><canvas id="canvas-widget" height="300px" data-chartid="<?php echo $postid; ?>" data-chart-type="<?php echo $post_chart_type; ?>" ></canvas></li>
 							</ul>
               <?php echo $after_widget; ?>
         <?php

@@ -37,7 +37,7 @@ function get_chart_data($) {
                 data[3].forEach(function (element, index) {
                     barChartData.datasets.push({
                         label: data[1][index],
-                        borderColor: data[2][index],
+                        borderColor: '#'+data[2][index],
                         borderWidth: 1,
                         data: element
                     });
@@ -106,7 +106,7 @@ function get_chart_data_widget($) {
                 data[3].forEach(function (element, index) {
                     barChartData.datasets.push({
                         label: data[1][index],
-                        borderColor: data[2][index],
+                        borderColor: '#'+data[2][index],
                         borderWidth: 1,
                         data: element
                     });

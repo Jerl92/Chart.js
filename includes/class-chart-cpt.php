@@ -36,7 +36,7 @@ function chart_post_type() {
 		'label'                 => __( 'Chart', 'text_domain' ),
 		'description'           => __( 'Site Charts.', 'text_domain' ),
 		'labels'                => $labels,
-		'supports'              => array( 'title', 'editor', 'comments', 'revisions' ),
+		'supports'              => array( 'title', 'comments', 'revisions' ),
 		'taxonomies'            => array( 'category', 'post_tag' ),
         'hierarchical'          => true,
         'public'                => true,
@@ -55,5 +55,19 @@ function chart_post_type() {
 
 }
 add_action( 'init', 'chart_post_type', 0 );
+
+
+// force use of templates from plugin folder
+function chart_force_template( $template )
+{	
+	
+	if( is_singular( 'chart' ) ) {
+        $template = plugin_dir_path( dirname( __FILE__ ) ) .'/templates/charts-page-template.php';
+	}
+	
+  return $template;
+  
+}
+add_filter( 'template_include', 'chart_force_template' );
 
 ?>

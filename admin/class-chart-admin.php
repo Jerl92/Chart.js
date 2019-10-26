@@ -75,6 +75,10 @@ class Chart_Admin {
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/chart-admin.css', array(), $this->version, 'all' );
 
+		wp_enqueue_style( 'Chart.min', plugin_dir_url( __FILE__ ) . 'css/Chart.min.css', array(), $this->version, 'all' );
+		
+		wp_enqueue_style( 'Chart', plugin_dir_url( __FILE__ ) . 'css/Chart.css', array(), $this->version, 'all' );
+
 	}
 
 	/**
@@ -97,6 +101,18 @@ class Chart_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/chart-admin.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script( 'jscolor', plugin_dir_url( __FILE__ ) . 'js/jscolor.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script( 'Chart.bundle.min', plugin_dir_url( __FILE__ ) . 'js/Chart.bundle.min.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script( 'Chart.bundle', plugin_dir_url( __FILE__ ) . 'js/Chart.bundle.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script( 'Chart.min', plugin_dir_url( __FILE__ ) . 'js/Chart.min.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script( 'Chart', plugin_dir_url( __FILE__ ) . 'js/Chart.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script( 'Chart.render', plugin_dir_url( __FILE__ ) . 'js/Chart.rendre.js', array( 'jquery' ), $this->version, false );
 
 	}
 

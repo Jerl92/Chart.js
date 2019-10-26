@@ -1,5 +1,9 @@
 <?php
 
+add_action( 'init', function() {
+    remove_post_type_support( 'chart', 'editor' );
+}, 99);
+
 //Register Meta Box
 function chart_register_meta_box() {
     add_meta_box( 'chart-meta-box-info', esc_html__( 'chart Info', 'chart' ), 'chart_info_meta_box_callback', 'chart', 'normal', 'high' );
@@ -11,14 +15,18 @@ function chart_info_meta_box_callback( $meta_id ) {
     wp_nonce_field(basename(__FILE__), "meta-box-nonce"); 
     $get_meta_chart_data = get_post_meta($meta_id->ID, "meta_chart_data", true);
     $meta_chart_name = get_post_meta($meta_id->ID, "meta_chart_name", true);
+    $post_chart_type = get_post_meta($meta_id->ID, "meta_chart_type", true);
     $meta_chart_column_name = get_post_meta($meta_id->ID, "meta_chart_column_name", true);
     $meta_chart_column_color = get_post_meta($meta_id->ID, "meta_chart_column_color", true);
     $i = 0; ?> 
+
+    <?php echo '<canvas id="canvas" data-chartid="' . $meta_id->ID . '" data-chart-type="' . $post_chart_type .'"></canvas>'; ?>
 
     <table style="width:100%">
         <tr>
             <th>Chart type</th>
             <select name="meta-box-chart-type">
+                <option value=<?php echo $post_chart_type; ?>><?php echo $post_chart_type; ?></option>
                 <option value="line">Line</option>
                 <option value="bar">Bar</option>
                 <option value="radar">Radar</option>
@@ -29,11 +37,13 @@ function chart_info_meta_box_callback( $meta_id ) {
         </tr>
     </table>
 
+    <div id="chart-btn-table" style="width:100%">
+        <ul>
+            <li><button id="meta-box-btn" type="button">Add Line</button><button id="meta-box-btn-add-row" type="button">Add Row</button></li>
+        </ul>
+    </div>
+
     <table id="chart-data-table" data-chartid="<?php echo $meta_id->ID; ?>" data-chart-loop="<?php echo $i; ?>" style="width:100%">
-        <tr>
-            <td><button id="meta-box-btn" type="button">Add Line</button></td>
-            <td><button id="meta-box-btn-add-row" type="button">Add Row</button></td>
-        </tr>
         <?php $i = 0; ?> 
         <?php $y = 0; ?> 
 
@@ -43,7 +53,7 @@ function chart_info_meta_box_callback( $meta_id ) {
             <th></th>
             <?php $i = 0; ?>
             <?php foreach ($get_meta_chart_data as $meta_chart_data) {
-                echo '<th><input name="meta-box-chart-column-name[]" type="text" id="meta-box-chart-column-name" value="' . $meta_chart_column_name[$i] . '" size="15"></th>';
+                echo '<th class="td-meta-box-chart-' . $i . '"><input name="meta-box-chart-column-name[]" type="text" id="meta-box-chart-column-name" value="' . $meta_chart_column_name[$i] . '" size="15"></th>';
                 $i++;
             } ?>
          </tr>
@@ -54,15 +64,9 @@ function chart_info_meta_box_callback( $meta_id ) {
             <th></th>
             <?php $i = 0; ?>
             <?php foreach ($get_meta_chart_data as $meta_chart_data) { ?>
-                <th><select name="meta-box-chart-column-color[]">
-                    <option value="red">Red</option>
-                    <option value="orange">Orange</option>
-                    <option value="yellow">Yellow</option>
-                    <option value="green">Green</option>
-                    <option value="blue">Blue</option>
-                    <option value="purple">Purple</option>
-                    <option value="grey">Grey</option>
-                </select></th>
+                <th class="td-meta-box-chart-<?php echo $i ?>">
+                    <input name="meta-box-chart-column-color[]" class="jscolor" value="<?php echo $meta_chart_column_color[$i]; ?>" size="15">
+                </th>
                 <?php $i++;
             } ?>
          </tr>
@@ -80,7 +84,7 @@ function chart_info_meta_box_callback( $meta_id ) {
 
                 echo '<th>Chart data</th>';
                 foreach ($get_meta_chart_data as $meta_chart_data) {
-                    echo '<td><input name="meta-box-chart[' . $y . '][' . $i . ']" type="number" id="meta-box-chart" value="' . $meta_chart_data[$i] . '" size="30"></td>';
+                    echo '<td class="td-meta-box-chart-' . $y . '"><input name="meta-box-chart[' . $y . '][' . $i . ']" type="number" id="meta-box-chart" value="' . $meta_chart_data[$i] . '" size="30"></td>';
                     $y++;
                 }
 
@@ -89,6 +93,16 @@ function chart_info_meta_box_callback( $meta_id ) {
             $i++;
         } ?>
 
+    <?php $i = 0; ?>
+        <?php echo '<tr id="tr-char-remove-column" class="tr-char-remove-column">'; ?>
+            <th></th>
+            <th></th>
+            <th></th>
+            <?php foreach ($get_meta_chart_data as $meta_chart_data) {
+                echo '<td class="btn-remove-column td-meta-box-chart-' . $i . '"><div id="btn-remove-column-' . $i . '" class="meta-box-btn-remove-column" data-id="' . $i . '">Remove</div></td>';
+                $i++;
+            } ?>
+        </tr>
     </table>
 
 <?php }
@@ -151,7 +165,7 @@ function my_action_javascript() { ?>
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             jQuery.post(ajaxurl, data, function(response) {
                 console.log(response);
-                $("#chart-data-table").append(response);
+                $("#tr-char-remove-column").before(response);
                 remove_chart_data($);
             });
 
@@ -164,12 +178,45 @@ function my_action_javascript() { ?>
 	</script> <?php
 }
 
+add_action( 'admin_footer', 'remove_column_javascript' ); // Write our JS below here
+function remove_column_javascript() { ?>
+	<script type="text/javascript" >
+    function remove_column_data($) {
+    $(".meta-box-btn-remove-column").on( "click", function(event) {
+		event.preventDefault();
+            var data = {
+                'action': 'remove_column',
+                'postid': $("#chart-data-table").attr('data-chartid'),
+                'whatever': $(this).attr('data-id'),
+                'count_colums': $("#tr-char-0 #meta-box-chart").length,
+                'count': $(".meta-box-btn-remove").length
+            };
+
+            // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+            jQuery.post(ajaxurl, data, function(response) {
+                console.log($('.td-meta-box-chart-'+response).length);
+                $('.td-meta-box-chart-'+response).each(function(){
+                    $(this).empty();
+                });
+                add_chart_data($);
+                remove_chart_data($);
+            });
+
+        });
+    }
+
+    jQuery(document).ready(function($) {
+        remove_column_data($);
+    });
+	</script> <?php
+}
+
 add_action( 'admin_footer', 'remove_data_javascript' ); // Write our JS below here
 function remove_data_javascript() { ?>
 	<script type="text/javascript" >
     function remove_chart_data($) {
-    $(".meta-box-btn-remove").on( "click", function(event) {
-		event.preventDefault();
+        $(".meta-box-btn-remove").on( "click", function(event) {
+		    event.preventDefault();
             var data = {
                 'action': 'remove_data',
                 'postid': $("#chart-data-table").attr('data-chartid'),
@@ -213,19 +260,28 @@ function add_row_javascript() { ?>
                 console.log(response);
                 var myform = $('#chart-data-table');
                 var count = $("#tr-char-0 #meta-box-chart").length
+
                 myform.find('tr').each(function(){
                     var trow = $(this);
+                    if(trow.index() == 0){
+                        trow.append('<th class="td-meta-box-chart-'+count+'"><input name="meta-box-chart-column-name[]" type="text" id="meta-box-chart-column-name" value="" size="15"></th>');
+                    }
                     if(trow.index() == 1){
-                        trow.append('<th><input name="meta-box-chart-column-name[]" type="text" id="meta-box-chart-column-name" value="" size="15"></th>');
+                        trow.append('<th class="td-meta-box-chart-'+count+'"><select name="meta-box-chart-column-color[]"><option value="red">Red</option><option value="orange">Orange</option><option value="yellow">Yellow</option><option value="green">Green</option><option value="blue">Blue</option><option value="purple">Purple</option><option value="grey">Grey</option></select></th>');
                     }
-                    if(trow.index() == 2){
-                        trow.append('<th><select name="meta-box-chart-column-color[]"><option value="red">Red</option><option value="orange">Orange</option><option value="yellow">Yellow</option><option value="green">Green</option><option value="blue">Blue</option><option value="purple">Purple</option><option value="grey">Grey</option></select></th>');
-                    }
-                    if(trow.index() > 2){
-                        trow.append('<td><input name="meta-box-chart['+count+'][]" type="number" id="meta-box-chart" size="30" value=""></td>');
-                    }
-                    
                 });
+
+                myform.find('.btn-remove').each(function(){
+                    var trow = $(this);
+                    trow.before('<td class="td-meta-box-chart-'+count+'"><input name="meta-box-chart['+count+'][]" type="number" id="meta-box-chart" size="30" value=""></td>');             
+                });
+
+
+                $('#tr-char-remove-column').last().append('<td class="btn-remove-column td-meta-box-chart-'+count+'"><div id="btn-remove-column-'+count+'" class="meta-box-btn-remove-column" data-id="'+count+'">Remove</div></td>');
+
+                remove_column_data($);
+                remove_chart_data($);
+
             });
 
         });
@@ -237,6 +293,72 @@ function add_row_javascript() { ?>
 	</script> <?php
 }
 
+
+add_action( 'admin_footer', 'render_chart_javascript' ); // Write our JS below here
+function render_chart_javascript() { ?>
+	<script type="text/javascript" >
+    function get_chart_data($) {
+
+        event.preventDefault();
+        var data = {
+            'action': 'get_data',
+            'postid': $("#chart-data-table").attr('data-chartid'),
+            'whatever': $(this).attr('data-id'),
+            'count_colums': $("#tr-char-0 #meta-box-chart").length,
+            'count': $(".meta-box-btn-remove").length
+        };
+
+        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+        jQuery.post(ajaxurl, data, function(response) {
+            console.log(response);
+                var MONTHS = response[0];
+                var color = Chart.helpers.color;
+
+                var barChartData = {
+                    labels: MONTHS,
+                    datasets: []        
+                };        
+
+                var ctx = document.getElementById('canvas').getContext('2d');
+
+                if (ctx) {
+                    response[3].forEach(function (element, index) {
+                        barChartData.datasets.push({
+                            label: response[1][index],
+                            borderColor: '#'+response[2][index],
+                            borderWidth: 1,
+                            data: element
+                        });
+                    });
+
+                    
+                    window.myBar = new Chart(ctx, {
+                        type: $("#canvas").attr('data-chart-type'),
+                        data: barChartData,
+                        options: {
+                            responsive: true,
+                            legend: {
+                                position: 'bottom',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Chart.js Bar Chart'
+                            }
+                        }
+                    });
+                }
+
+        });
+    }
+
+jQuery(document).ready(function($) {
+    get_chart_data($);
+});
+</script> <?php
+}
+
+
+
 add_action( 'wp_ajax_my_action', 'my_action' );
 function my_action() {
 	global $wpdb; // this is how you get access to the database
@@ -247,16 +369,16 @@ function my_action() {
     $count_del = intval( $_POST['count_del'] );
     $i = 0;
 
-    $html = '<tr id="tr-char-' . $count . '">';
+    $html = '<tr id="tr-char-' . $count . '" class="tr-char">';
         $html .= '<th>Chart name</th>';
         $html .= '<td><input name="meta-box-chart-name[]" type="text" id="meta-box-chart-name" size="30" value=""></td>';
         $html .= '<th>Chart data</th>';
         while ($i < $count) {
-            $html .= '<td><input name="meta-box-chart[' . $i . '][' . $count_del .']" type="number" id="meta-box-chart" size="30" value=""></td>';
+            $html .= '<td class="td-meta-box-chart-' . $i . '"><input name="meta-box-chart[' . $i . '][' . $count_del .']" type="number" id="meta-box-chart" size="30" value=""></td>';
             $i++;
         }
         if ($count == 0) {
-            $html .= '<td><input name="meta-box-chart[0][0]" type="number" id="meta-box-chart" size="30" value=""></td>';
+            $html .= '<td class="td-meta-box-chart-' . $count . '"><input name="meta-box-chart[0][0]" type="number" id="meta-box-chart" size="30" value=""></td>';
         }
 
         $html .= '<td class="btn-remove"><div id="btn-remove-' . $whatever . '" class="meta-box-btn-remove" data-id="' . $whatever . '">Remove</div></td>';
@@ -283,13 +405,45 @@ function remove_data() {
         array_splice($get_meta_chart_data[$i], $whatever, 1);
         $i++;
     }
-    unset($meta_chart_name[$whatever]);
-    array_values($meta_chart_name);
+    array_splice($meta_chart_name, $whatever, 1);
 
     update_post_meta( $postid, "meta_chart_data", $get_meta_chart_data );
     update_post_meta( $postid, "meta_chart_name", $meta_chart_name );
 
     // delete_post_meta( $postid, "meta_chart_data");
+
+    return wp_send_json ( $whatever ) ;
+}
+
+add_action( 'wp_ajax_remove_column', 'remove_column' );
+
+function remove_column() {
+	global $wpdb; // this is how you get access to the database
+
+    $whatever = intval( $_POST['whatever'] );
+    $count = intval( $_POST['count'] );
+    $postid = intval( $_POST['postid'] );
+    $count_colums = intval( $_POST['count_colums'] );
+    $i = 0;
+    $get_meta_chart_data = get_post_meta($postid, "meta_chart_data", true);
+    $meta_chart_name = get_post_meta($postid, "meta_chart_name", true);
+    $meta_chart_column_name = get_post_meta($postid, "meta_chart_column_name", true);
+    $meta_chart_column_color = get_post_meta($postid, "meta_chart_column_color", true);
+
+    unset($get_meta_chart_data[$whatever]);
+    $arr = array_values($get_meta_chart_data);
+
+    array_splice($meta_chart_column_name, $whatever, 1);
+    array_splice($meta_chart_column_color, $whatever, 1);
+
+    update_post_meta($postid, "meta_chart_data", $arr );
+    update_post_meta($postid, "meta_chart_column_name", $meta_chart_column_name);
+    update_post_meta($postid, "meta_chart_column_color", $meta_chart_column_color);
+
+    //delete_post_meta( $postid, "meta_chart_data");
+    //delete_post_meta( $postid, "meta_chart_name");
+    //delete_post_meta( $postid, "meta_chart_column_name");
+    //delete_post_meta( $postid, "meta_chart_column_color");
 
     return wp_send_json ( $whatever ) ;
 }
@@ -306,6 +460,37 @@ function add_row() {
     $meta_chart_name = get_post_meta($postid, "meta_chart_name", true);
 
     return wp_send_json ( $count ) ;
+}
+
+add_action( 'wp_ajax_get_data', 'get_data' );
+
+function get_data() {
+	global $wpdb; // this is how you get access to the database
+
+    $whatever = intval( $_POST['whatever'] );
+    $count = intval( $_POST['count'] );
+    $postid = intval( $_POST['postid'] );
+    $get_meta_chart_data = get_post_meta($postid, "meta_chart_data", true);
+    $meta_chart_name = get_post_meta($postid, "meta_chart_name", true);
+
+    $chart_data = get_post_meta($postid, "meta_chart_data", true);
+    $chart_name = get_post_meta($postid, "meta_chart_name", true);
+    $column_name = get_post_meta($postid, "meta_chart_column_name", true);
+    $column_color = get_post_meta($postid, "meta_chart_column_color", true);
+
+    $html[0] = $chart_name;
+
+    $html[1] = $column_name;
+
+    $html[2] = $column_color;
+
+    foreach ($chart_data as $chart_value) {
+        $html[3][] = $chart_value;
+    }
+
+    $arr = implode("", $html);
+
+    return wp_send_json ($html); 
 }
 
 ?>
