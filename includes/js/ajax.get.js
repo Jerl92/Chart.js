@@ -4,11 +4,6 @@ function get_chart_data($) {
     $.fn.ready();
 	'use strict';
 
-	/**
-	 * Remove All from Saved for Later
-	 */
-    event.preventDefault();
-
     var $this = $(this);
     nonce = $this.data('nonce');
         object_id = $("#canvas").attr('data-chartid');
@@ -71,11 +66,6 @@ function get_chart_data_widget($) {
     
     $.fn.ready();
 	'use strict';
-
-	/**
-	 * Remove All from Saved for Later
-	 */
-    event.preventDefault();
 
     var $this = $(this);
     nonce = $this.data('nonce');
