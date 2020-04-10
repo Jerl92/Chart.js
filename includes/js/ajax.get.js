@@ -48,8 +48,7 @@ function get_chart_data($) {
                             position: 'bottom',
                         },
                         title: {
-                            display: true,
-                            text: 'Chart.js Bar Chart'
+                            display: false
                         }
                     }
                 });
@@ -111,8 +110,7 @@ function get_chart_data_widget($) {
                             position: 'bottom',
                         },
                         title: {
-                            display: true,
-                            text: 'Chart.js Bar Chart'
+                            display: false
                         }
                     }
                 });

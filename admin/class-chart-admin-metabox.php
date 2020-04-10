@@ -341,8 +341,7 @@ function render_chart_javascript() { ?>
                                 position: 'bottom',
                             },
                             title: {
-                                display: true,
-                                text: 'Chart.js Bar Chart'
+                                display: false
                             }
                         }
                     });

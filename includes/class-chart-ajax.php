@@ -8,11 +8,9 @@ function wp_chart_ajax_scripts() {
 	/* Plugin DIR URL */
 	$url = trailingslashit( plugin_dir_url( __FILE__ ) );
 	//
-	if ( is_user_logged_in() ) {
-		wp_register_script( 'wp-get-ajax-scripts', $url . "js/ajax.get.js", array( 'jquery' ), '1.0.0', true );
-		wp_localize_script( 'wp-get-ajax-scripts', 'get_ajax_url', admin_url( 'admin-ajax.php' ) );
-        wp_enqueue_script( 'wp-get-ajax-scripts' );	
-	}
+    wp_register_script( 'wp-get-ajax-scripts', $url . "js/ajax.get.js", array( 'jquery' ), '1.0.0', true );
+    wp_localize_script( 'wp-get-ajax-scripts', 'get_ajax_url', admin_url( 'admin-ajax.php' ) );
+    wp_enqueue_script( 'wp-get-ajax-scripts' );	
 }
 
 add_action( 'wp_ajax_get_chart', 'ajax_get_chart' );

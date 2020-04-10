@@ -1,6 +1,6 @@
 # ChartJS Plugin for Wordpress</br>
 
-<img src="https://i.ibb.co/jwx3TV2/chart.png" />
+<img src="https://i.ibb.co/DKYDRmB/chartjs.jpg" />
 
 ## Installation
 
