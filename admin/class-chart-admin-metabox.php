@@ -298,8 +298,6 @@ add_action( 'admin_footer', 'render_chart_javascript' ); // Write our JS below h
 function render_chart_javascript() { ?>
 	<script type="text/javascript" >
     function get_chart_data($) {
-
-        event.preventDefault();
         var data = {
             'action': 'get_data',
             'postid': $("#chart-data-table").attr('data-chartid'),
