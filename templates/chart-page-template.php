@@ -1,4 +1,4 @@
-<?php /* Template Name: CustomPageT1 */ ?>
+<?php /* Template Name: Chart.JS */ ?>
 <?php get_header(); ?>
 
 	<div id="primary" class="featured-content content-area">

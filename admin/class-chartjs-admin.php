@@ -3,11 +3,11 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @link       https://jerl92.tk
+ * @link       https://https://github.com/Jerl92
  * @since      1.0.0
  *
- * @package    Chart
- * @subpackage Chart/admin
+ * @package    Chartjs
+ * @subpackage Chartjs/admin
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    Chart
- * @subpackage Chart/admin
- * @author     Jeremie Langevin <jeremie.langevin@outlook.com>
+ * @package    Chartjs
+ * @subpackage Chartjs/admin
+ * @author     Jeremie Langevin <jere.langevin@gmail.com>
  */
-class Chart_Admin {
+class Chartjs_Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -65,19 +65,17 @@ class Chart_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Chart_Loader as all of the hooks are defined
+		 * defined in Chartjs_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Chart_Loader will then create the relationship
+		 * The Chartjs_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/chart-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'Chart.js', plugin_dir_url( __FILE__ ) . 'css/Chart.css', array(), $this->version, 'all' );
 
-		wp_enqueue_style( 'Chart.min', plugin_dir_url( __FILE__ ) . 'css/Chart.min.css', array(), $this->version, 'all' );
-		
-		wp_enqueue_style( 'Chart', plugin_dir_url( __FILE__ ) . 'css/Chart.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/chartjs-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -92,27 +90,23 @@ class Chart_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Chart_Loader as all of the hooks are defined
+		 * defined in Chartjs_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Chart_Loader will then create the relationship
+		 * The Chartjs_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/chart-admin.js', array( 'jquery' ), $this->version, false );
-
 		wp_enqueue_script( 'jscolor', plugin_dir_url( __FILE__ ) . 'js/jscolor.js', array( 'jquery' ), $this->version, false );
-
-		wp_enqueue_script( 'Chart.bundle.min', plugin_dir_url( __FILE__ ) . 'js/Chart.bundle.min.js', array( 'jquery' ), $this->version, false );
-
-		wp_enqueue_script( 'Chart.bundle', plugin_dir_url( __FILE__ ) . 'js/Chart.bundle.js', array( 'jquery' ), $this->version, false );
-
-		wp_enqueue_script( 'Chart.min', plugin_dir_url( __FILE__ ) . 'js/Chart.min.js', array( 'jquery' ), $this->version, false );
 
 		wp_enqueue_script( 'Chart', plugin_dir_url( __FILE__ ) . 'js/Chart.js', array( 'jquery' ), $this->version, false );
 
+		wp_enqueue_script( 'Chart.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js', array( 'jquery' ), $this->version, false );
+
 		wp_enqueue_script( 'Chart.render', plugin_dir_url( __FILE__ ) . 'js/Chart.rendre.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/chartjs-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 

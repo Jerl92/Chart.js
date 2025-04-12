@@ -6,11 +6,11 @@
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @link       https://jerl92.tk
+ * @link       https://https://github.com/Jerl92
  * @since      1.0.0
  *
- * @package    Chart
- * @subpackage Chart/includes
+ * @package    Chartjs
+ * @subpackage Chartjs/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    Chart
- * @subpackage Chart/includes
- * @author     Jeremie Langevin <jeremie.langevin@outlook.com>
+ * @package    Chartjs
+ * @subpackage Chartjs/includes
+ * @author     Jeremie Langevin <jere.langevin@gmail.com>
  */
-class Chart_i18n {
+class Chartjs_i18n {
 
 
 	/**
@@ -35,7 +35,7 @@ class Chart_i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'chart',
+			'chartjs',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);

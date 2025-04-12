@@ -5,11 +5,11 @@
  *
  * This file is used to markup the public-facing aspects of the plugin.
  *
- * @link       https://jerl92.tk
+ * @link       https://https://github.com/Jerl92
  * @since      1.0.0
  *
- * @package    Chart
- * @subpackage Chart/public/partials
+ * @package    Chartjs
+ * @subpackage Chartjs/public/partials
  */
 ?>
 

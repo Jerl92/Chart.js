@@ -3,11 +3,11 @@
 /**
  * Fired during plugin deactivation
  *
- * @link       https://jerl92.tk
+ * @link       https://https://github.com/Jerl92
  * @since      1.0.0
  *
- * @package    Chart
- * @subpackage Chart/includes
+ * @package    Chartjs
+ * @subpackage Chartjs/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Chart
- * @subpackage Chart/includes
- * @author     Jeremie Langevin <jeremie.langevin@outlook.com>
+ * @package    Chartjs
+ * @subpackage Chartjs/includes
+ * @author     Jeremie Langevin <jere.langevin@gmail.com>
  */
-class Chart_Deactivator {
+class Chartjs_Deactivator {
 
 	/**
 	 * Short Description. (use period)

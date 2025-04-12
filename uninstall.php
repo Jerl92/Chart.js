@@ -19,10 +19,10 @@
  * For more information, see the following discussion:
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
- * @link       https://jerl92.tk
+ * @link       https://https://github.com/Jerl92
  * @since      1.0.0
  *
- * @package    Chart
+ * @package    Chartjs
  */
 
 // If uninstall not called from WordPress, then exit.

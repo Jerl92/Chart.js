@@ -6,11 +6,11 @@
  * A class definition that includes attributes and functions used across both the
  * public-facing side of the site and the admin area.
  *
- * @link       https://jerl92.tk
+ * @link       https://https://github.com/Jerl92
  * @since      1.0.0
  *
- * @package    Chart
- * @subpackage Chart/includes
+ * @package    Chartjs
+ * @subpackage Chartjs/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Chart
- * @subpackage Chart/includes
- * @author     Jeremie Langevin <jeremie.langevin@outlook.com>
+ * @package    Chartjs
+ * @subpackage Chartjs/includes
+ * @author     Jeremie Langevin <jere.langevin@gmail.com>
  */
-class Chart {
+class Chartjs {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class Chart {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Chart_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Chartjs_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -67,12 +67,12 @@ class Chart {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'CHART_VERSION' ) ) {
-			$this->version = CHART_VERSION;
+		if ( defined( 'CHARTJS_VERSION' ) ) {
+			$this->version = CHARTJS_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'chart';
+		$this->plugin_name = 'chartjs';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -86,10 +86,10 @@ class Chart {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - Chart_Loader. Orchestrates the hooks of the plugin.
-	 * - Chart_i18n. Defines internationalization functionality.
-	 * - Chart_Admin. Defines all hooks for the admin area.
-	 * - Chart_Public. Defines all hooks for the public side of the site.
+	 * - Chartjs_Loader. Orchestrates the hooks of the plugin.
+	 * - Chartjs_i18n. Defines internationalization functionality.
+	 * - Chartjs_Admin. Defines all hooks for the admin area.
+	 * - Chartjs_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -103,43 +103,41 @@ class Chart {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chart-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chartjs-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chart-i18n.php';
-		
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chart-cpt.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chartjs-i18n.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chart-widget.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chartjs-cpt.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chart-shortcode.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chartjs-shortcode.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chart-ajax.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-chartjs-ajax.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-chart-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-chartjs-admin.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-chart-admin-metabox.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/chartjs-admin-meta-box.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-chart-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-chartjs-public.php';
 
-		$this->loader = new Chart_Loader();
+		$this->loader = new Chartjs_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Chart_i18n class in order to set the domain and to register the hook
+	 * Uses the Chartjs_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -147,7 +145,7 @@ class Chart {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Chart_i18n();
+		$plugin_i18n = new Chartjs_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -162,7 +160,7 @@ class Chart {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Chart_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Chartjs_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -178,7 +176,7 @@ class Chart {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Chart_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Chartjs_Public( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -209,7 +207,7 @@ class Chart {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    Chart_Loader    Orchestrates the hooks of the plugin.
+	 * @return    Chartjs_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;

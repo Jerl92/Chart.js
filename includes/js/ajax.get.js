@@ -1,14 +1,11 @@
 
 function get_chart_data($) {
-    
-    $.fn.ready();
-	'use strict';
 
-    var $this = $(this);
+    var $this = jQuery(this);
     nonce = $this.data('nonce');
-        object_id = $("#canvas").attr('data-chartid');
+    object_id = jQuery("#canvas").attr('data-chartid');
 
-    $.ajax({
+    jQuery.ajax({
         type: 'post',
         url: get_ajax_url,
         dataType: 'JSON',
@@ -17,7 +14,6 @@ function get_chart_data($) {
             'action': 'get_chart'
         },
         success: function(data) {
-            console.log(data);
             var MONTHS = data[0];
             var color = Chart.helpers.color;
 
@@ -26,7 +22,7 @@ function get_chart_data($) {
                 datasets: []        
             };        
 
-            var ctx = document.getElementById('canvas').getContext('2d');
+            var ctx = document.getElementById('canvas');
 
             if (ctx) {
                 data[3].forEach(function (element, index) {
@@ -40,7 +36,7 @@ function get_chart_data($) {
 
                 
                 window.myBar = new Chart(ctx, {
-                    type: $("#canvas").attr('data-chart-type'),
+                    type: jQuery("#canvas").attr('data-chart-type'),
                     data: barChartData,
                     options: {
                         responsive: true,
@@ -62,15 +58,12 @@ function get_chart_data($) {
 }
 
 function get_chart_data_widget($) {
-    
-    $.fn.ready();
-	'use strict';
 
-    var $this = $(this);
+    var $this = jQuery(this);
     nonce = $this.data('nonce');
-        object_id = $("#canvas-widget").attr('data-chartid');
+        object_id = jQuery("#canvas-widget").attr('data-chartid');
 
-    $.ajax({
+    jQuery.ajax({
         type: 'post',
         url: get_ajax_url,
         dataType: 'JSON',
@@ -79,7 +72,6 @@ function get_chart_data_widget($) {
             'action': 'get_chart'
         },
         success: function(data) {
-            console.log(data);
             var MONTHS = data[0];
             var color = Chart.helpers.color;
 
@@ -89,7 +81,7 @@ function get_chart_data_widget($) {
             };        
 
             
-            var ctx = document.getElementById('canvas-widget').getContext('2d');
+            var ctx = document.getElementById('canvas-widget');
 
             if (ctx) {
                 data[3].forEach(function (element, index) {
@@ -102,7 +94,7 @@ function get_chart_data_widget($) {
                 });
 
                 window.myBar = new Chart(ctx, {
-                    type: $("#canvas-widget").attr('data-chart-type'),
+                    type: jQuery("#canvas-widget").attr('data-chart-type'),
                     data: barChartData,
                     options: {
                         responsive: true,

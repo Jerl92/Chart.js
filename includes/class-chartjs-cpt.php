@@ -4,10 +4,10 @@
 function chart_post_type() {
 
 	$labels = array(
-		'name'                  => _x( 'Charts', 'Post Type General Name', 'text_domain' ),
-		'singular_name'         => _x( 'Chart', 'Post Type Singular Name', 'text_domain' ),
-		'menu_name'             => __( 'Charts', 'text_domain' ),
-		'name_admin_bar'        => __( 'Chart', 'text_domain' ),
+		'name'                  => _x( 'Chart.JS', 'Post Type General Name', 'text_domain' ),
+		'singular_name'         => _x( 'Chart.JS', 'Post Type Singular Name', 'text_domain' ),
+		'menu_name'             => __( 'Chart.JS', 'text_domain' ),
+		'name_admin_bar'        => __( 'Chart.JS', 'text_domain' ),
 		'archives'              => __( 'Item Archives', 'text_domain' ),
 		'attributes'            => __( 'Item Attributes', 'text_domain' ),
 		'parent_item_colon'     => __( 'Parent Item:', 'text_domain' ),
@@ -33,8 +33,8 @@ function chart_post_type() {
 		'filter_items_list'     => __( 'Filter items list', 'text_domain' ),
 	);
 	$args = array(
-		'label'                 => __( 'Chart', 'text_domain' ),
-		'description'           => __( 'Site Charts.', 'text_domain' ),
+		'label'                 => __( 'Chart.JS', 'text_domain' ),
+		'description'           => __( 'Site Charts.JS', 'text_domain' ),
 		'labels'                => $labels,
 		'supports'              => array( 'title', 'comments', 'revisions' ),
 		'taxonomies'            => array( 'category', 'post_tag' ),
@@ -62,7 +62,7 @@ function chart_force_template( $template )
 {	
 	
 	if( is_singular( 'chart' ) ) {
-        $template = plugin_dir_path( dirname( __FILE__ ) ) .'/templates/charts-page-template.php';
+        $template = plugin_dir_path( dirname( __FILE__ ) ) .'/templates/chart-page-template.php';
 	}
 	
   return $template;

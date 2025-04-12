@@ -1,9 +1,5 @@
 <?php
 
-add_action( 'init', function() {
-    remove_post_type_support( 'chart', 'editor' );
-}, 99);
-
 //Register Meta Box
 function chart_register_meta_box() {
     add_meta_box( 'chart-meta-box-info', esc_html__( 'chart Info', 'chart' ), 'chart_info_meta_box_callback', 'chart', 'normal', 'high' );
@@ -39,7 +35,7 @@ function chart_info_meta_box_callback( $meta_id ) {
 
     <div id="chart-btn-table" style="width:100%">
         <ul>
-            <li><button id="meta-box-btn" type="button">Add Line</button><button id="meta-box-btn-add-row" type="button">Add Row</button></li>
+            <li><button class="meta-box-btn" type="button">Add Line</button><button class="meta-box-btn-add-row" type="button">Add Row</button></li>
         </ul>
     </div>
 
@@ -145,27 +141,27 @@ function save_chart_info_meta_box($post_id, $post, $update) {
 }
 add_action("save_post", "save_chart_info_meta_box", 10, 3);
 
-
-add_action( 'admin_footer', 'my_action_javascript' ); // Write our JS below here
-function my_action_javascript() { ?>
+add_action( 'admin_footer', 'my_action_javascript_chart' ); // Write our JS below here
+function my_action_javascript_chart() { ?>
 	<script type="text/javascript" >
     function add_chart_data($) {
 
-        $("#meta-box-btn").on( "click", function(event) {
-		event.preventDefault();
+        jQuery(".meta-box-btn").on( "click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
 
             var data = {
-                'action': 'my_action',
-                'postid': $("#chart-data-table").attr('data-chartid'),
-                'whatever': $(".tr-char").length,
-                'count_del': $(".meta-box-btn-remove").length,
-                'count': $("#tr-char-0 #meta-box-chart").length
+                'action': 'my_action_chart',
+                'postid': jQuery("#chart-data-table").attr('data-chartid'),
+                'whatever': jQuery(".tr-char").length,
+                'count_del': jQuery(".meta-box-btn-remove").length,
+                'count': jQuery("#tr-char-0 #meta-box-chart").length
             };
 
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             jQuery.post(ajaxurl, data, function(response) {
-                console.log(response);
-                $("#tr-char-remove-column").before(response);
+                jQuery("#tr-char-remove-column").before(response);
                 remove_chart_data($);
             });
 
@@ -183,20 +179,22 @@ function remove_column_javascript() { ?>
 	<script type="text/javascript" >
     function remove_column_data($) {
     $(".meta-box-btn-remove-column").on( "click", function(event) {
-		event.preventDefault();
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        
             var data = {
                 'action': 'remove_column',
-                'postid': $("#chart-data-table").attr('data-chartid'),
-                'whatever': $(this).attr('data-id'),
-                'count_colums': $("#tr-char-0 #meta-box-chart").length,
-                'count': $(".meta-box-btn-remove").length
+                'postid': jQuery("#chart-data-table").attr('data-chartid'),
+                'whatever': jQuery(this).attr('data-id'),
+                'count_colums': jQuery("#tr-char-0 #meta-box-chart").length,
+                'count': jQuery(".meta-box-btn-remove").length
             };
 
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             jQuery.post(ajaxurl, data, function(response) {
-                console.log($('.td-meta-box-chart-'+response).length);
-                $('.td-meta-box-chart-'+response).each(function(){
-                    $(this).empty();
+                jQuery('.td-meta-box-chart-'+response).each(function(){
+                    jQuery(this).empty();
                 });
                 add_chart_data($);
                 remove_chart_data($);
@@ -215,20 +213,22 @@ add_action( 'admin_footer', 'remove_data_javascript' ); // Write our JS below he
 function remove_data_javascript() { ?>
 	<script type="text/javascript" >
     function remove_chart_data($) {
-        $(".meta-box-btn-remove").on( "click", function(event) {
-		    event.preventDefault();
+        jQuery(".meta-box-btn-remove").on( "click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
             var data = {
                 'action': 'remove_data',
-                'postid': $("#chart-data-table").attr('data-chartid'),
-                'whatever': $(this).attr('data-id'),
-                'count_colums': $("#tr-char-0 #meta-box-chart").length,
-                'count': $(".meta-box-btn-remove").length
+                'postid': jQuery("#chart-data-table").attr('data-chartid'),
+                'whatever': jQuery(this).attr('data-id'),
+                'count_colums': jQuery("#tr-char-0 #meta-box-chart").length,
+                'count': jQuery(".meta-box-btn-remove").length
             };
 
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             jQuery.post(ajaxurl, data, function(response) {
-                console.log(response);
-                $("#tr-char-"+data['whatever']).empty();
+                jQuery("#tr-char-"+data['whatever']).empty();
                 add_chart_data($);
                 remove_chart_data($);
             });
@@ -246,23 +246,24 @@ add_action( 'admin_footer', 'add_row_javascript' ); // Write our JS below here
 function add_row_javascript() { ?>
 	<script type="text/javascript" >
     function add_row_chart_data($) {
-    $("#meta-box-btn-add-row").on( "click", function(event) {
-		event.preventDefault();
+    $(".meta-box-btn-add-row").on( "click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
             var data = {
                 'action': 'add_row',
-                'postid': $("#chart-data-table").attr('data-chartid'),
-                'whatever': $(this).attr('data-id'),
-                'count': $(".meta-box-btn-remove").length
+                'postid': jQuery("#chart-data-table").attr('data-chartid'),
+                'whatever': jQuery(this).attr('data-id'),
+                'count': jQuery(".meta-box-btn-remove").length
             };
 
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             jQuery.post(ajaxurl, data, function(response) {
-                console.log(response);
-                var myform = $('#chart-data-table');
-                var count = $("#tr-char-0 #meta-box-chart").length
+                var myform = jQuery('#chart-data-table');
+                var count = jQuery("#tr-char-0 #meta-box-chart").length
 
                 myform.find('tr').each(function(){
-                    var trow = $(this);
+                    var trow = jQuery(this);
                     if(trow.index() == 0){
                         trow.append('<th class="td-meta-box-chart-'+count+'"><input name="meta-box-chart-column-name[]" type="text" id="meta-box-chart-column-name" value="" size="15"></th>');
                     }
@@ -272,12 +273,12 @@ function add_row_javascript() { ?>
                 });
 
                 myform.find('.btn-remove').each(function(){
-                    var trow = $(this);
+                    var trow = jQuery(this);
                     trow.before('<td class="td-meta-box-chart-'+count+'"><input name="meta-box-chart['+count+'][]" type="number" id="meta-box-chart" size="30" value=""></td>');             
                 });
 
 
-                $('#tr-char-remove-column').last().append('<td class="btn-remove-column td-meta-box-chart-'+count+'"><div id="btn-remove-column-'+count+'" class="meta-box-btn-remove-column" data-id="'+count+'">Remove</div></td>');
+                jQuery('#tr-char-remove-column').last().append('<td class="btn-remove-column td-meta-box-chart-'+count+'"><div id="btn-remove-column-'+count+'" class="meta-box-btn-remove-column" data-id="'+count+'">Remove</div></td>');
 
                 remove_column_data($);
                 remove_chart_data($);
@@ -300,15 +301,14 @@ function render_chart_javascript() { ?>
     function get_chart_data($) {
         var data = {
             'action': 'get_data',
-            'postid': $("#chart-data-table").attr('data-chartid'),
-            'whatever': $(this).attr('data-id'),
-            'count_colums': $("#tr-char-0 #meta-box-chart").length,
-            'count': $(".meta-box-btn-remove").length
+            'postid': jQuery("#chart-data-table").attr('data-chartid'),
+            'whatever': jQuery(this).attr('data-id'),
+            'count_colums': jQuery("#tr-char-0 #meta-box-chart").length,
+            'count': jQuery(".meta-box-btn-remove").length
         };
 
         // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
         jQuery.post(ajaxurl, data, function(response) {
-            console.log(response);
                 var MONTHS = response[0];
                 var color = Chart.helpers.color;
 
@@ -317,7 +317,7 @@ function render_chart_javascript() { ?>
                     datasets: []        
                 };        
 
-                var ctx = document.getElementById('canvas').getContext('2d');
+                var ctx = document.getElementById('canvas');
 
                 if (ctx) {
                     response[3].forEach(function (element, index) {
@@ -331,7 +331,7 @@ function render_chart_javascript() { ?>
 
                     
                     window.myBar = new Chart(ctx, {
-                        type: $("#canvas").attr('data-chart-type'),
+                        type: jQuery("#canvas").attr('data-chart-type'),
                         data: barChartData,
                         options: {
                             responsive: true,
@@ -356,8 +356,8 @@ jQuery(document).ready(function($) {
 
 
 
-add_action( 'wp_ajax_my_action', 'my_action' );
-function my_action() {
+add_action( 'wp_ajax_my_action_chart', 'my_action_chart' );
+function my_action_chart() {
 	global $wpdb; // this is how you get access to the database
 
     $whatever = intval( $_POST['whatever'] );

@@ -3,11 +3,11 @@
 /**
  * Register all actions and filters for the plugin
  *
- * @link       https://jerl92.tk
+ * @link       https://https://github.com/Jerl92
  * @since      1.0.0
  *
- * @package    Chart
- * @subpackage Chart/includes
+ * @package    Chartjs
+ * @subpackage Chartjs/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Chart
- * @subpackage Chart/includes
- * @author     Jeremie Langevin <jeremie.langevin@outlook.com>
+ * @package    Chartjs
+ * @subpackage Chartjs/includes
+ * @author     Jeremie Langevin <jere.langevin@gmail.com>
  */
-class Chart_Loader {
+class Chartjs_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.
